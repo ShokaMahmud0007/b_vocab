@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quiz Results</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 800px;
+            margin: auto;
+        }
+        .score {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .result {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+        .correct {
+            background-color: #e0ffe0;
+        }
+        .incorrect {
+            background-color: #ffe0e0;
+        }
+        .skipped {
+            background-color: #f9f9f9;
+        }
+        .icon {
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .correct .icon { color: green; }
+        .incorrect .icon { color: red; }
+        .btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            text-decoration: none;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 4px;
+            display: inline-block;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="score">Your Score: {{ score }} / {{ total }}</div>
+
+    {% for r in results %}
+        <div class="result {% if r.skipped %}skipped{% elif r.is_correct %}correct{% else %}incorrect{% endif %}">
+            <div><strong>Q{{ loop.index }}: {{ r.question }}</strong></div>
+            {% if r.skipped %}
+                <div><em>Skipped</em></div>
+            {% else %}
+                <div>Your Answer: {{ r.user_answer }}
+                    {% if r.is_correct %}
+                        <span class="icon">✓</span>
+                    {% else %}
+                        <span class="icon">✗</span>
+                        <div>Correct Answer: {{ r.correct_answer }} <span class="icon">✓</span></div>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+
+    <div style="text-align: center; margin-top: 30px;">
+        <a href="{{ url_for('home') }}" class="btn">Restart Quiz</a>
+    </div>
+</body>
+</html>
