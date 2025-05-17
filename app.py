@@ -101,19 +101,19 @@ def results():
     results = []
     for i, q in enumerate(quiz_data['questions']):
         user_answer = quiz_data['user_answers'][i]
-        is_correct = (user_answer == q['correct_answer'])
+        skipped = user_answer is None
+        is_correct = (user_answer == q['correct_answer']) if not skipped else False
+
         results.append({
             'question': q['en'],
             'user_answer': user_answer,
             'correct_answer': q['correct_answer'],
             'is_correct': is_correct,
-            'skipped': user_answer is None
+            'skipped': skipped
         })
 
     score = sum(1 for r in results if r['is_correct'])
     return render_template('results.html', results=results, score=score, total=len(results))
-
-
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
@@ -146,5 +146,6 @@ def admin():
         current_data = []
 
     return render_template('admin.html', vocab=current_data)
+
 if __name__ == '__main__':
     app.run(debug=True)
